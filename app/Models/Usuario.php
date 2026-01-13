@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -10,6 +11,7 @@ class Usuario extends Authenticatable
     use Notifiable;
 
     protected $table = 'usuarios';
+
     protected $primaryKey = 'id_usuario';
 
     protected $fillable = [
@@ -28,38 +30,70 @@ class Usuario extends Authenticatable
         'activo' => 'boolean',
     ];
 
-    //  Relaciones
-    public function responsable()
+    // -----------------------------
+    // Relaciones
+    // -----------------------------
+
+    /**
+     * Relación con Responsable (Admin o Profesor)
+     */
+    public function responsable(): HasOne
     {
-        return $this->hasOne(Responsable::class, 'id_usuario');
+        return $this->hasOne(Responsable::class, 'id_usuario', 'id_usuario');
     }
 
-    public function alumno()
+    /**
+     * Relación con Alumno
+     */
+    public function alumno(): HasOne
     {
-        return $this->hasOne(Alumno::class, 'id_usuario');
+        return $this->hasOne(Alumno::class, 'id_usuario', 'id_usuario');
     }
 
-    //  Helpers de rol
+    // -----------------------------
+    // Helpers de rol
+    // -----------------------------
+
+    /**
+     * Determina si el usuario es Admin
+     */
     public function isAdmin(): bool
     {
         return $this->responsable && $this->responsable->admin;
     }
 
+    /**
+     * Determina si el usuario es Responsable (Profesor)
+     */
     public function isResponsable(): bool
     {
         return $this->responsable && ! $this->responsable->admin;
     }
 
+    /**
+     * Determina si el usuario es Profesor
+     */
+    public function isProfesor(): bool
+    {
+        return $this->isResponsable();
+    }
+
+    /**
+     * Determina si el usuario es Alumno
+     */
     public function isAlumno(): bool
     {
         return (bool) $this->alumno;
     }
-    public function isProfesor(): bool
-{
-    return $this->isResponsable();
-}
 
-       public function getNameAttribute(): string
+    // -----------------------------
+    // Accesor de nombre
+    // -----------------------------
+
+    /**
+     * Devuelve el email como nombre por defecto
+     */
+    public function getNameAttribute(): string
     {
         return $this->email;
     }

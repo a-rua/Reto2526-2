@@ -29,12 +29,14 @@ class ProfesorPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Profesor/Resources'), for: 'App\Filament\Profesor\Resources')
-            ->discoverPages(in: app_path('Filament/Profesor/Pages'), for: 'App\Filament\Profesor\Pages')
+            // Registramos los recursos existentes
+            ->resources([
+                \App\Filament\Resources\Grupos\GrupoResource::class,
+                \App\Filament\Resources\Alumnos\AlumnoResource::class,
+            ])
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Profesor/Widgets'), for: 'App\Filament\Profesor\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
