@@ -2,16 +2,22 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alumno;
+use App\Models\Grupo;
+use App\Models\Responsable;
+use App\Models\Usuario;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Usuario;
-use App\Models\Responsable;
-use App\Models\Alumno;
 
 class UsuarioRolesSeeder extends Seeder
 {
     public function run(): void
     {
+        $grupo = Grupo::create([
+            'nombre_grupo' => 'Grupo A',
+            'descripcion' => 'Grupo de prueba para los alumnos',
+        ]);
+
         //  ADMIN
         $admin = Usuario::create([
             'nombre' => 'Administrador',
@@ -45,9 +51,11 @@ class UsuarioRolesSeeder extends Seeder
             'password' => Hash::make('password'),
             'activo' => true,
         ]);
+        // Crear el alumno y asignarle el grupo
 
         Alumno::create([
             'id_usuario' => $alumno->id_usuario,
+            'grupo_id' => $grupo->id,
         ]);
     }
 }

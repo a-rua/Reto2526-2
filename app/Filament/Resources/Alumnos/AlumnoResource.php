@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+
 class AlumnoResource extends Resource
 {
     protected static ?string $model = Alumno::class;
@@ -21,26 +22,28 @@ class AlumnoResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Alumnos';
- public static function shouldRegisterNavigation(): bool
-{
-$user = Auth::user();
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = Auth::user();
 
-  if (!$user) {
-    return false;
-}
+        if (! $user) {
+            return false;
+        }
 
-return $user->isAdmin() || $user->isProfesor();
-}
-public static function canViewAny(): bool
-{
-    $user = auth()->user();
+        return $user->isAdmin() || $user->isProfesor();
+    }
 
-    if (!$user) return false;
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
 
-    return $user->isAdmin() || $user->isProfesor();
-}
+        if (! $user) {
+            return false;
+        }
 
+        return $user->isAdmin() || $user->isProfesor();
+    }
 
     public static function form(Schema $schema): Schema
     {
