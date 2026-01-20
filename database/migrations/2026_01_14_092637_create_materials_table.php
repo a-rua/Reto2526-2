@@ -11,18 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materials', function (Blueprint $table) {
-            $table->id('id_material');
-            $table->string('nombre_material');
-            $table->string('descripcion');
+    Schema::create('materials', function (Blueprint $table) {
+    $table->id('id_material');
+    $table->string('nombre_material')->unique();
+    $table->string('descripcion')->nullable();
 
-            // Relación con la tabla proveedors
-            $table->foreignId('id_proveedor')
-                ->constrained('proveedors', 'id_proveedores')
-                ->onDelete('cascade');
+    // Relación con proveedors
+    $table->foreignId('id_proveedores')->nullable()
+          ->constrained('proveedors', 'id_proveedores')
+          ->nullOnDelete();
+        $table->foreignId('id_tarea')
+          ->nullable()
+          ->constrained('tareas', 'id_tarea')
+          ->cascadeOnDelete();
 
-            $table->timestamps();
-        });
+    $table->timestamps();
+});
+
     }
 
     /**

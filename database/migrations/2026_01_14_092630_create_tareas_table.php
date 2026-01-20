@@ -11,31 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tareas', function (Blueprint $table) {
-            $table->id('id_tarea'); // PK personalizada
-            $table->string('nombre')->unique();
+      Schema::create('tareas', function (Blueprint $table) {
+    $table->id('id_tarea');
+    $table->string('nombre')->unique();
 
-            // Fechas y tiempos
-            $table->dateTime('fecha_inicio')->nullable();
-            $table->time('estimado')->nullable();
-            $table->dateTime('fecha_fin')->nullable();
+    $table->dateTime('fecha_inicio')->nullable();
+    $table->time('estimado')->nullable();
+    $table->dateTime('fecha_fin')->nullable();
 
-            // Estados (Booleanos)
-            $table->boolean('visible')->default(true);
-            $table->boolean('realizado')->default(false);
+    $table->boolean('visible')->default(true);
+    $table->boolean('realizado')->default(false);
 
-            // Relación con Grupos
-            $table->foreignId('grupo_id')
-                ->constrained('grupos')
-                ->cascadeOnDelete();
+    $table->foreignId('grupo_id')
+        ->constrained('grupos')
+        ->cascadeOnDelete();
 
-            // Relación con Responsables
-            $table->foreignId('id_responsable')
-                ->constrained('responsables')
-                ->cascadeOnDelete();
+    $table->foreignId('id_responsable')
+        ->constrained('responsables')
+        ->cascadeOnDelete();
 
-            $table->timestamps();
-        });
+    // Relación opcional con fase
+    $table->foreignId('id_fase')->nullable()
+        ->constrained('fases', 'id_fase')
+        ->nullOnDelete(); // Si la fase se elimina, la tarea queda sin fase
+
+    $table->timestamps();
+});
+
     }
 
     /**
