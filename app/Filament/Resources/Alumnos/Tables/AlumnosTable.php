@@ -15,10 +15,6 @@ class AlumnosTable
     {
         return $table
             ->columns([
-                // ID del alumno (autoincremental, referencia al usuario)
-                TextColumn::make('id_usuario')
-                    ->numeric()
-                    ->sortable(),
 
                 // Nombre del usuario relacionado
                 TextColumn::make('usuario.nombre')

@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources\Alumnos\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Schema;
 
 class AlumnoForm
 {
@@ -11,23 +12,31 @@ class AlumnoForm
     {
         return $schema
             ->schema([
+
                 // Nombre del usuario
                 Forms\Components\TextInput::make('usuario.nombre')
                     ->label('Nombre')
-                    ->required(), // obligatorio
+                    ->required(),
 
                 // Email del usuario
                 Forms\Components\TextInput::make('usuario.email')
                     ->label('Email')
                     ->email()
-                    ->required(), // obligatorio
+                    ->required(),
 
-                // Password del usuario
+                // Contraseña del usuario
                 Forms\Components\TextInput::make('usuario.password')
                     ->label('Contraseña')
                     ->password()
-                    ->required() // obligatorio
-                    ->dehydrateStateUsing(fn ($state) => bcrypt($state)), // encriptar al guardar
+                    ->required(fn ($record) => $record === null) // obligatorio solo al crear
+                    ->dehydrateStateUsing(fn ($state) => $state ? bcrypt($state) : null), // encriptar solo si cambia
+
+                // Grupo del alumno
+                Select::make('grupo_id')
+                    ->label('Grupo')
+                    ->relationship('grupo', 'nombre_grupo')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 }

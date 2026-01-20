@@ -4,18 +4,24 @@ namespace App\Filament\Resources\Alumnos\Pages;
 
 use App\Filament\Resources\Alumnos\AlumnoResource;
 use App\Models\Usuario;
-use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditAlumno extends EditRecord
 {
     protected static string $resource = AlumnoResource::class;
 
-    protected function getHeaderActions(): array
+    // Precargar datos del usuario en el form
+    protected function mutateFormDataBeforeFill(array $data): array
     {
-        return [
-            DeleteAction::make(),
-        ];
+        if ($this->record->usuario) {
+            $data['usuario'] = [
+                'nombre' => $this->record->usuario->nombre,
+                'email' => $this->record->usuario->email,
+                'password' => $this->record->usuario->email,
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -35,7 +41,7 @@ class EditAlumno extends EditRecord
                 $usuario->email = $usuarioData['email'];
             }
 
-            if (!empty($usuarioData['password'])) {
+            if (! empty($usuarioData['password'])) {
                 $usuario->password = bcrypt($usuarioData['password']);
             }
 
