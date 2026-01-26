@@ -20,10 +20,6 @@ return new class extends Migration
     $table->foreignId('id_proveedores')->nullable()
           ->constrained('proveedors', 'id_proveedores')
           ->nullOnDelete();
-        $table->foreignId('id_tarea')
-          ->nullable()
-          ->constrained('tareas', 'id_tarea')
-          ->cascadeOnDelete();
 
     $table->timestamps();
 });
