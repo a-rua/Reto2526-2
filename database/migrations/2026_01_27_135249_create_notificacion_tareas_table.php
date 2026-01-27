@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notificacion_tareas', function (Blueprint $table) {
-        $table->id();
-    $table->foreignId('tarea_id')->constrained('tareas', 'id_tarea')->cascadeOnDelete();
-    $table->foreignId('alumno_id')->constrained('users')->cascadeOnDelete();
-    $table->foreignId('responsable_id')->constrained('users')->cascadeOnDelete();
+      Schema::create('notificacion_tareas', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('id_tarea')->constrained('tareas', 'id_tarea')->cascadeOnDelete();
+
+    // Apuntamos explícitamente a la tabla 'usuarios' y su columna 'id_usuario'
+    $table->foreignId('alumno_id')->constrained('usuarios', 'id_usuario')->cascadeOnDelete();
+    $table->foreignId('responsable_id')->constrained('usuarios', 'id_usuario')->cascadeOnDelete();
+
     $table->text('comentario')->nullable();
-    $table->timestamp('leido_at')->nullable(); // Para saber si el responsable lo vio
+    $table->timestamp('leido_at')->nullable();
     $table->timestamps();
-        });
+});
     }
 
     /**

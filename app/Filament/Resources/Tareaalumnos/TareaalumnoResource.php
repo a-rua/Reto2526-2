@@ -9,7 +9,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema; // <--- IMPRESCINDIBLE PARA EL MÉTODO FORM
 use Filament\Tables\Table;
-use Filament\Tables\Actions\EditAction; // <--- CORREGIDO PARA TABLAS
+use Filament\Actions\EditAction; // <--- CORREGIDO PARA TABLAS
 use Illuminate\Database\Eloquent\Builder;
 
 class TareaalumnoResource extends Resource

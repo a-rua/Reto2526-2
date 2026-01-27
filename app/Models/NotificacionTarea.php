@@ -11,7 +11,7 @@ class NotificacionTarea extends Model
     protected $table = 'notificacion_tareas';
 
     protected $fillable = [
-        'tarea_id',
+        'id_tarea',
         'alumno_id',
         'responsable_id',
         'comentario',
@@ -19,6 +19,10 @@ class NotificacionTarea extends Model
     ];
 
     // Relaciones para que el responsable pueda ver los datos
-    public function tarea(): BelongsTo { return $this->belongsTo(Tarea::class, 'tarea_id'); }
-    public function alumno(): BelongsTo { return $this->belongsTo(User::class, 'alumno_id'); }
+    public function tarea(): BelongsTo { return $this->belongsTo(Tarea::class, 'id_tarea'); }
+public function alumno(): BelongsTo
+{
+    // Cambiamos User::class por Usuario::class
+    return $this->belongsTo(Usuario::class, 'alumno_id', 'id_usuario');
+}
 }

@@ -11,32 +11,27 @@ class EditTareaalumno extends EditRecord
 {
     protected static string $resource = TareaalumnoResource::class;
 
-    protected function afterSave(): void
-    {
-        $tarea = $this->record;
+ protected function afterSave(): void
+{
+    $tarea = $this->record;
 
-        // Solo notificamos si se ha marcado como realizada
-        if ($tarea->realizado) {
+    if ($tarea->realizado) {
+        \App\Models\NotificacionTarea::create([
+         'id_tarea'       => $tarea->id_tarea, // <--- Usar 'id_tarea'
+            'alumno_id'      => auth()->user()->id_usuario, // Usamos la clave primaria correcta
+            'responsable_id' => $tarea->id_responsable,
+            'comentario'     => $tarea->comentario_alumno, // El texto que escribe el alumno
+        ]);
 
-            // 1. Notificación en la Interfaz de Usuario para el Alumno
-            Notification::make()
-                ->title('Tarea finalizada')
+        // Notificación visual para el responsable
+        $responsable = \App\Models\Usuario::find($tarea->id_responsable);
+        if ($responsable) {
+            \Filament\Notifications\Notification::make()
+                ->title('Tarea completada')
                 ->success()
-                ->body('Se ha enviado el aviso a tu responsable.')
-                ->send();
-
-            // 2. Notificación a la Base de Datos para el Responsable
-            // Buscamos al usuario que coincide con el id_responsable de la tarea
-            $responsable = User::find($tarea->id_responsable);
-
-            if ($responsable) {
-                Notification::make()
-                    ->title('Tarea completada por alumno')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->body("El alumno ha marcado la tarea: \"{$tarea->nombre}\" como realizada.")
-                    ->sendToDatabase($responsable);
-            }
+                ->body("El alumno ha terminado: {$tarea->nombre}")
+                ->sendToDatabase($responsable);
         }
     }
+}
 }
