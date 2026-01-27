@@ -50,9 +50,7 @@ class Usuario extends Authenticatable
         return $this->hasOne(Alumno::class, 'id_usuario', 'id_usuario');
     }
 
-    // -----------------------------
-    // Helpers de rol
-    // -----------------------------
+
 
     /**
      * Determina si el usuario es Admin
@@ -81,9 +79,8 @@ class Usuario extends Authenticatable
     /**
      * Determina si el usuario es Alumno
      */
-    public function isAlumno(): bool
-    {
-        return (bool) $this->alumno;
+  public function isAlumno(): bool {
+        return $this->alumno !== null;
     }
 
     // -----------------------------
