@@ -18,7 +18,6 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
-use Illuminate\Database\Eloquent\Builder;
 use BackedEnum;
 
 class NotificacionTareaResource extends Resource
@@ -29,30 +28,6 @@ class NotificacionTareaResource extends Resource
 
     protected static ?string $navigationLabel = 'Notificaciones de Tareas';
 
-public static function canViewAny(): bool
-    {
-        return auth()->user()->responsable !== null;
-    }
-
-    /**
-     * FILTRO DE DATOS: El responsable solo verá las notificaciones
-     * dirigidas a él (donde responsable_id sea su ID de responsable).
-     */
-    public static function getEloquentQuery(): Builder
-    {
-        $user = auth()->user();
-        $query = parent::getEloquentQuery();
-
-        // Si es responsable pero NO es admin, filtramos por su ID
-        if ($user->responsable && ! $user->isAdmin()) {
-            return $query->where('responsable_id', $user->responsable->id_responsable);
-        }
-
-        // Si es Admin, lo dejamos ver todas
-        return $query;
-    }
-
-    // ... (el resto de tus métodos form y table se mantienen igual)
 
     public static function form(Schema $schema): Schema
     {
@@ -88,9 +63,9 @@ public static function canViewAny(): bool
     {
         return $table
             ->columns([
-                TextColumn::make('alumno.nombre')
-                    ->label('Alumno')
-                    ->sortable(),
+               TextColumn::make('alumno_usuario.nombre')
+    ->label('Alumno')
+    ->searchable(),
                 TextColumn::make('tarea.nombre')
                     ->label('Tarea'),
                 TextColumn::make('created_at')
