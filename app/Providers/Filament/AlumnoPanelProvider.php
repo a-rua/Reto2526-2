@@ -29,12 +29,13 @@ class AlumnoPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Alumno/Resources'), for: 'App\Filament\Alumno\Resources')
-            ->discoverPages(in: app_path('Filament/Alumno/Pages'), for: 'App\Filament\Alumno\Pages')
+            // Descubrimiento de recursos corregido
+            ->discoverResources(in: app_path('Filament/Alumno/Resources'), for: 'App\\Filament\\Alumno\\Resources')
+            ->discoverPages(in: app_path('Filament/Alumno/Pages'), for: 'App\\Filament\\Alumno\\Pages')
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Alumno/Widgets'), for: 'App\Filament\Alumno\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Alumno/Widgets'), for: 'App\\Filament\\Alumno\\Widgets')
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,

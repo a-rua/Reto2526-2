@@ -54,6 +54,8 @@ class UsuarioRolesSeeder extends Seeder
         ]);
         $prov3 = Proveedor::create([
             'nombre_proveedor' => 'Amazon Business',
+            'nombre_proveedor' => 'Proveedor1',
+             'nombre_proveedor' => 'Proveedor2',
 
         ]);
         // Crear el alumno y asignarle el grupo
