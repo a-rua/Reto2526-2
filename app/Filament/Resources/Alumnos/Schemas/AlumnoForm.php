@@ -24,13 +24,9 @@ class AlumnoForm
                     ->email()
                     ->required(),
 
-                // Contraseña del usuario
-                Forms\Components\TextInput::make('usuario.password')
-                    ->label('Contraseña')
-                    ->password()
-                    ->required(fn ($record) => $record === null) // obligatorio solo al crear
-                    ->dehydrateStateUsing(fn ($state) => $state ? bcrypt($state) : null), // encriptar solo si cambia
-
+Forms\Components\TextInput::make('usuario.password')
+    ->label('Contraseña')
+    ->required(),
                 // Grupo del alumno
                 Select::make('grupo_id')
                     ->label('Grupo')

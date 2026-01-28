@@ -20,11 +20,7 @@ class NotificacionTarea extends Model
 
     // Relaciones para que el responsable pueda ver los datos
     public function tarea(): BelongsTo { return $this->belongsTo(Tarea::class, 'id_tarea'); }
-public function alumno()
-{
-    return $this->belongsTo(Alumno::class, 'alumno_id');
-}
-// app/Models/NotificacionTarea.php
+
 
 public function alumno_usuario()
 {

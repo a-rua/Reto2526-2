@@ -10,45 +10,33 @@ class EditAlumno extends EditRecord
 {
     protected static string $resource = AlumnoResource::class;
 
-    // Precargar datos del usuario en el form
-    protected function mutateFormDataBeforeFill(array $data): array
-    {
-        if ($this->record->usuario) {
-            $data['usuario'] = [
-                'nombre' => $this->record->usuario->nombre,
-                'email' => $this->record->usuario->email,
-                'password' => $this->record->usuario->email,
-            ];
+  protected function mutateFormDataBeforeFill(array $data): array
+{
+    if ($this->record->usuario) {
+        $data['usuario'] = [
+            'nombre' => $this->record->usuario->nombre,
+            'email' => $this->record->usuario->email,
+         'password' => $this->record->usuario->password,
+        ];
+    }
+    return $data;
+}
+
+protected function mutateFormDataBeforeSave(array $data): array
+{
+    if (isset($data['usuario'])) {
+        $usuario = $this->record->usuario;
+        $usuario->nombre = $data['usuario']['nombre'];
+        $usuario->email = $data['usuario']['email'];
+
+        // Solo encriptamos si el usuario escribió una nueva contraseña
+        if (!empty($data['usuario']['password'])) {
+            $usuario->password = bcrypt($data['usuario']['password']);
         }
 
-        return $data;
+        $usuario->save();
+        unset($data['usuario']);
     }
-
-    /**
-     * Antes de guardar el alumno, actualizamos los datos del usuario relacionado
-     */
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        if (isset($data['usuario'])) {
-            $usuarioData = $data['usuario'];
-            $usuario = $this->record->usuario;
-
-            if ($usuarioData['nombre'] ?? false) {
-                $usuario->nombre = $usuarioData['nombre'];
-            }
-
-            if ($usuarioData['email'] ?? false) {
-                $usuario->email = $usuarioData['email'];
-            }
-
-            if (! empty($usuarioData['password'])) {
-                $usuario->password = bcrypt($usuarioData['password']);
-            }
-
-            $usuario->save();
-        }
-
-        // No guardamos ningún dato directamente en Alumno, retornamos vacío
-        return [];
-    }
+    return $data;
+}
 }

@@ -20,14 +20,14 @@ class EditTareaalumno extends EditRecord
 protected function afterSave(): void
 {
     $tarea = $this->record;
-    // Obtenemos el ID '1' de la tabla alumnos
-    $alumnoId = auth()->user()->alumno?->id;
+    $user = auth()->user();
 
-    if ($tarea->realizado && $alumnoId) {
+    // Usamos id_usuario porque tu migración apunta a la tabla usuarios
+    if ($tarea->realizado) {
         \App\Models\NotificacionTarea::updateOrCreate(
             [
                 'id_tarea' => $tarea->id_tarea,
-                'alumno_id' => $alumnoId, // Guardará el 1
+                'alumno_id' => $user->id_usuario,
             ],
             [
                 'responsable_id' => $tarea->id_responsable,

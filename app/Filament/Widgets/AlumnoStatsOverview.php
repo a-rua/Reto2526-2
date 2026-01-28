@@ -20,25 +20,28 @@ class AlumnoStatsOverview extends BaseWidget
     {
         $user = auth()->user();
 
-        // Obtenemos el ID de la relación alumno
-        $idAlumno = $user->alumno?->id_alumno;
+        // CORRECCIÓN: Usamos id_usuario porque es lo que guarda tu tabla notificacion_tareas
+        $idUsuarioAlumno = $user->id_usuario;
 
-        // 1. Tareas que el alumno ha entregado (están en la tabla de notificaciones)
-        $tareasEntregadas = NotificacionTarea::where('alumno_id', $idAlumno)->count();
+        // 1. Tareas que el alumno ha entregado
+        $tareasEntregadas = NotificacionTarea::where('alumno_id', $idUsuarioAlumno)->count();
 
         // 2. Tareas que el profesor ya ha marcado como leídas/revisadas
-        $tareasRevisadas = NotificacionTarea::where('alumno_id', $idAlumno)
+        $tareasRevisadas = NotificacionTarea::where('alumno_id', $idUsuarioAlumno)
             ->whereNotNull('leido_at')
             ->count();
 
-        // 3. Tareas enviadas que aún no han sido revisadas
-        $pendientesRevision = $tareasEntregadas - $tareasRevisadas;
+        // 3. Tareas enviadas que aún no han sido revisadas (Pendientes)
+        $pendientesRevision = NotificacionTarea::where('alumno_id', $idUsuarioAlumno)
+            ->whereNull('leido_at')
+            ->count();
 
         return [
             Stat::make('Mis Entregas', $tareasEntregadas)
                 ->description('Total de tareas enviadas')
                 ->descriptionIcon('heroicon-m-paper-airplane')
-                ->color('info'),
+                ->color('info')
+                ->url(route('filament.dashboard.resources.notificacion-tareas.index')), // Opcional: enlace a sus entregas
 
             Stat::make('Tareas Revisadas', $tareasRevisadas)
                 ->description('Feedback del profesor listo')

@@ -19,7 +19,8 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use BackedEnum;
-
+// ... (tus otros imports se mantienen)
+use Illuminate\Database\Eloquent\Builder;
 class NotificacionTareaResource extends Resource
 {
     protected static ?string $model = NotificacionTarea::class;
@@ -27,6 +28,30 @@ class NotificacionTareaResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Notificaciones de Tareas';
+    /**
+     * SEGURIDAD: Solo los usuarios que son "Responsables" pueden ver este recurso.
+     */
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+        return $user && ($user->responsable !== null || $user->isAdmin());
+    }
+
+    /**
+     * FILTRO: El responsable solo ve las tareas de las que él es responsable.
+     */
+  public static function getEloquentQuery(): Builder
+{
+    $user = auth()->user();
+    $query = parent::getEloquentQuery();
+
+    // El responsable debe ver las tareas donde su id_usuario coincida con responsable_id
+    if ($user->responsable && !$user->isAdmin()) {
+        return $query->where('responsable_id', $user->id_usuario);
+    }
+
+    return $query;
+}
 
 
     public static function form(Schema $schema): Schema
