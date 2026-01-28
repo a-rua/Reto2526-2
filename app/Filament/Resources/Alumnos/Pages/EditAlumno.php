@@ -16,7 +16,7 @@ class EditAlumno extends EditRecord
         $data['usuario'] = [
             'nombre' => $this->record->usuario->nombre,
             'email' => $this->record->usuario->email,
-         'password' => $this->record->usuario->password,
+          'password' => null,
         ];
     }
     return $data;
