@@ -11,23 +11,23 @@ class CreateResponsable extends CreateRecord
 {
     protected static string $resource = ResponsableResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        // 1. Creamos el Usuario en la tabla 'usuarios'
-        $usuario = Usuario::create([
-            'nombre'   => $data['u_nombre'],
-            'email'    => $data['u_email'],
-            'password' => bcrypt($data['u_password']),
-            'activo'   => true,
-        ]);
+ protected function handleRecordCreation(array $data): \App\Models\Responsable
+{
+    // 1. Accedemos al sub-array 'usuario' que viene del formulario
+    $usuarioData = $data['usuario'];
 
-        // 2. Insertamos el ID generado en el campo que MySQL está reclamando
-        $data['id_usuario'] = $usuario->id_usuario;
+    // 2. Creamos el Usuario con los datos correctos
+    $usuario = \App\Models\Usuario::create([
+        'nombre'   => $usuarioData['nombre'], // Antes buscabas $data['u_nombre']
+        'email'    => $usuarioData['email'],
+        'password' => bcrypt($usuarioData['password']),
+        'activo'   => true,
+    ]);
 
-        // 3. Limpiamos los datos "temporales" para que no ensucien el INSERT de responsables
-        unset($data['u_nombre'], $data['u_email'], $data['u_password']);
-
-        // Ahora $data solo tiene: 'id_usuario' y 'admin'. MySQL ya no dará error.
-        return $data;
-    }
+    // 3. Creamos el Responsable vinculado al nuevo usuario
+    return \App\Models\Responsable::create([
+        'id_usuario' => $usuario->id_usuario,
+        'admin'      => $data['admin'] ?? false,
+    ]);
+}
 }

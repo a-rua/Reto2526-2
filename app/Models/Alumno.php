@@ -20,4 +20,13 @@ class Alumno extends Model
     {
         return $this->belongsTo(Grupo::class, 'grupo_id');
     }
+    protected static function booted()
+{
+    static::deleting(function ($alumno) {
+        // Al borrar el alumno, buscamos su usuario y lo borramos
+        if ($alumno->usuario) {
+            $alumno->usuario->delete();
+        }
+    });
+}
 }

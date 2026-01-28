@@ -9,37 +9,30 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class StatsOverview extends BaseWidget
 {
     /**
-     * SEGURIDAD: Solo permite que el widget se renderice si el
-     * usuario logueado tiene un perfil de responsable.
+     * SEGURIDAD: Solo lo ven los Responsables que NO son Admins.
      */
     public static function canView(): bool
     {
-        return auth()->user()->responsable !== null;
+        $user = auth()->user();
+        return $user && $user->responsable !== null && !$user->isAdmin();
     }
 
     protected function getStats(): array
     {
         $user = auth()->user();
-
-        // Obtenemos el ID de responsable vinculado al usuario
         $responsableId = $user->responsable?->id_responsable;
 
-        // Preparamos la consulta base
-        $query = NotificacionTarea::whereNull('leido_at');
-
-        // Si es responsable pero NO es admin, solo cuenta sus tareas
-        if ($responsableId && ! $user->isAdmin()) {
-            $query->where('responsable_id', $responsableId);
-        }
-
-        $conteo = $query->count();
+        // Contamos solo las tareas no leídas asignadas a este responsable específico
+        $conteo = NotificacionTarea::whereNull('leido_at')
+            ->where('responsable_id', $responsableId)
+            ->count();
 
         return [
             Stat::make('Tareas por revisar', $conteo)
                 ->description($conteo > 0 ? 'Tienes entregas pendientes' : '¡Todo al día!')
                 ->descriptionIcon($conteo > 0 ? 'heroicon-m-bell-alert' : 'heroicon-m-check-badge')
                 ->color($conteo > 0 ? 'danger' : 'success')
-                ->chart([1, 4, 2, 8, 5, $conteo]),
+                ->chart([3, 5, 2, 7, 4, $conteo]),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Responsables\Tables;
 
+use App\Models\Responsable;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -31,8 +32,8 @@ class ResponsablesTable
                     ->label('Rol')
                     ->formatStateUsing(fn ($state) => $state ? 'Admin' : 'Profesor')
                     ->colors([
-                        'danger' => fn ($state) => ! $state,   // Profesor = rojo
-                        'success' => fn ($state) => $state,    // Admin = verde
+                        'danger' => false,  // Rojo para Profesor (0)
+                        'success' => true,  // Verde para Admin (1)
                     ]),
             ])
             ->filters([
@@ -43,13 +44,21 @@ class ResponsablesTable
                         '0' => 'Profesor',
                     ]),
             ])
-            ->recordActions([
+            ->actions([ // Cambiado recordActions por actions para Filament estándar
                 EditAction::make(),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->after(function (Responsable $record) {
+                        // Borra el usuario asociado después de borrar al responsable
+                        $record->usuario?->delete();
+                    }),
             ])
-            ->toolbarActions([
+            ->bulkActions([ // Cambiado toolbarActions por bulkActions
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->after(function (\Illuminate\Database\Eloquent\Collection $records) {
+                            // Borra los usuarios de todos los responsables seleccionados
+                            $records->each(fn ($record) => $record->usuario?->delete());
+                        }),
                 ]),
             ]);
     }

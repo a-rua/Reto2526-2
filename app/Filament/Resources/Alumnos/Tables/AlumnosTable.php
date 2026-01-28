@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
+use App\Models\Alumno;
 class AlumnosTable
 {
     public static function configure(Table $table): Table
@@ -49,13 +50,13 @@ class AlumnosTable
                 EditAction::make(),
 
                 // Acción de eliminar individual
-                DeleteAction::make()
-                    ->before(function ($record) {
-                        // Eliminar el usuario relacionado antes de eliminar el alumno
-                        if ($record->usuario) {
-                            $record->usuario->delete();
-                        }
-                    }),
+              DeleteAction::make()
+    ->after(function (Alumno $record) {
+        // Una vez borrado el alumno, buscamos y borramos su usuario
+        if ($record->id_usuario) {
+            \App\Models\Usuario::where('id_usuario', $record->id_usuario)->delete();
+        }
+    }),
             ])
             ->toolbarActions([
                 // Acciones masivas (seleccionar varios registros)

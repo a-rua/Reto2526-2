@@ -24,6 +24,7 @@ class MaterialesForm
 
                 Select::make('id_proveedores')
                     ->label('Proveedor')
+                    ->required()
                     ->relationship('proveedor', 'nombre_proveedor')
                     ->searchable()
                     ->preload()
@@ -32,6 +33,7 @@ class MaterialesForm
                 // AÑADIMOS LA RELACIÓN CON TAREAS
                 Select::make('tareas')
                     ->label('Asignar a Tareas')
+                    ->required()
                     ->relationship('tareas', 'nombre') // Relación 'tareas', columna 'nombre'
                     ->multiple() // Permite elegir varias tareas
                     ->searchable()
