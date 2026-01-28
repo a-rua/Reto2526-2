@@ -17,7 +17,7 @@ class CreateResponsable extends CreateRecord
         $usuario = Usuario::create([
             'nombre'   => $data['u_nombre'],
             'email'    => $data['u_email'],
-            'password' => Hash::make($data['u_password']),
+            'password' => bcrypt($data['u_password']),
             'activo'   => true,
         ]);
 

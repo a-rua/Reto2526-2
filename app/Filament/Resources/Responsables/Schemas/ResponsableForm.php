@@ -8,26 +8,26 @@ use Filament\Forms\Components\Toggle;
 
 class ResponsableForm
 {
-    public static function configure(Schema $schema): Schema
-    {
-        return $schema->components([
-            TextInput::make('u_nombre')
-                ->label('Nombre Completo')
-                ->required(),
+  public static function configure(Schema $schema): Schema
+{
+    return $schema->components([
+        TextInput::make('usuario.nombre') // Antes era u_nombre
+            ->label('Nombre Completo')
+            ->required(),
 
-            TextInput::make('u_email')
-                ->label('Correo Electrónico')
-                ->email()
-                ->required(),
+        TextInput::make('usuario.email') // Antes era u_email
+            ->label('Correo Electrónico')
+            ->email()
+            ->required(),
 
-            TextInput::make('u_password')
-                ->label('Contraseña')
-                ->password()
-                ->required(fn ($operation) => $operation === 'create'),
+        TextInput::make('usuario.password') // Antes era u_password
+            ->label('Contraseña')
+            // No uses ->password() si quieres verla como texto plano
+            ->required(fn ($operation) => $operation === 'create'),
 
-            Toggle::make('admin')
-                ->label('¿Es Administrador?')
-                ->default(false),
-        ]);
-    }
+        Toggle::make('admin')
+            ->label('¿Es Administrador?')
+            ->default(false),
+    ]);
+}
 }
