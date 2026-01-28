@@ -13,17 +13,29 @@ class ResponsableForm
     return $schema->components([
         TextInput::make('usuario.nombre') // Antes era u_nombre
             ->label('Nombre Completo')
-            ->required(),
+            ->required()
+            ->unique(
+                table: 'usuarios',
+                column: 'nombre',
+                ignorable: fn ($record) => $record?->usuario
+            ),
 
         TextInput::make('usuario.email') // Antes era u_email
             ->label('Correo Electrónico')
             ->email()
-            ->required(),
+            ->required()
+            ->unique(
+                table: 'usuarios',
+                column: 'email',
+                ignorable: fn ($record) => $record?->usuario
+            ),
 
-        TextInput::make('usuario.password') // Antes era u_password
-            ->label('Contraseña')
-            // No uses ->password() si quieres verla como texto plano
-            ->required(fn ($operation) => $operation === 'create'),
+       TextInput::make('usuario.password')
+    ->password()
+    ->label('Contraseña')
+    ->dehydrated(fn ($state) => filled($state)) // solo guarda si hay algo
+    ->required(false)
+    ->placeholder('Dejar vacío para no cambiarla'),
 
         Toggle::make('admin')
             ->label('¿Es Administrador?')
