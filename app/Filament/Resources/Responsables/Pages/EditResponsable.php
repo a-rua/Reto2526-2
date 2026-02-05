@@ -6,6 +6,8 @@ use App\Filament\Resources\Responsables\ResponsableResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use App\Models\Responsable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 class EditResponsable extends EditRecord
 {
     protected static string $resource = ResponsableResource::class;
@@ -38,28 +40,28 @@ class EditResponsable extends EditRecord
 }
 
 
-    /**
-     * Paso 2: Guardar los cambios en el Usuario antes de actualizar el Responsable.
-     */
-  protected function mutateFormDataBeforeSave(array $data): array
-{
-    if (isset($data['usuario'])) {
-        $usuarioData = $data['usuario'];
-        $usuario = $this->record->usuario;
+  protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        return DB::transaction(function () use ($record, $data) {
+            if (isset($data['usuario'])) {
+                $usuario = $record->usuario;
+                $usuario->nombre = $data['usuario']['nombre'];
+                $usuario->email = $data['usuario']['email'];
 
-        $usuario->nombre = $usuarioData['nombre'];
-        $usuario->email  = $usuarioData['email'];
+                // Solo actualiza si el admin escribió una nueva clave
+                if (!empty($data['usuario']['password'])) {
+                    $usuario->password = bcrypt($data['usuario']['password']);
+                }
 
-        if (!empty($usuarioData['password'])) {
-            $usuario->password = bcrypt($usuarioData['password']);
-        }
+                $usuario->save();
+            }
 
-        $usuario->save();
+            // Limpiamos el array de datos para que no falle al actualizar el Alumno
+            unset($data['usuario']);
+            $record->update($data);
 
-        unset($data['usuario']);
+            return $record;
+        });
     }
-
-    return $data;
-}
 
 }
