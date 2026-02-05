@@ -33,7 +33,7 @@ class MaterialesForm
                 // AÑADIMOS LA RELACIÓN CON TAREAS
                 Select::make('tareas')
                     ->label('Asignar a Tareas')
-                    ->required()
+                     ->nullable()
                     ->relationship('tareas', 'nombre') // Relación 'tareas', columna 'nombre'
                     ->multiple() // Permite elegir varias tareas
                     ->searchable()

@@ -9,7 +9,7 @@ use App\Filament\Resources\Tareas\Schemas\TareasForm;
 use App\Filament\Resources\Tareas\Tables\TareasTable;
 use App\Filament\Resources\Tareas\RelationManagers\MaterialesRelationManager;
 use App\Models\Tarea;
-
+use Illuminate\Database\Eloquent\Builder;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -24,6 +24,20 @@ class TareasResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'Tarea';
+public static function getEloquentQuery(): Builder
+{
+    $user = auth()->user();
+    $query = parent::getEloquentQuery();
+
+    // El admin ve todo
+    if ($user->isAdmin()) {
+        return $query;
+    }
+
+    // El profesor solo ve sus tareas
+    // Usamos $user->responsable->id para obtener el ID de la tabla responsables
+    return $query->where('id_responsable', $user->responsable?->id);
+}
      public static function shouldRegisterNavigation(): bool
     {
         $user = Auth::user();

@@ -73,7 +73,7 @@ Select::make('id_responsable')
                 Select::make('id_fase')
                     ->label('Fase (opcional)')
                     ->relationship('fase', 'nombre')
-                    ->nullable()
+                    ->required()
                     ->searchable()
                     ->preload(),
             ]);
