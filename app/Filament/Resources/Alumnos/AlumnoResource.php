@@ -50,6 +50,7 @@ class AlumnoResource extends Resource
         return AlumnoForm::configure($schema);
     }
 
+
     public static function table(Table $table): Table
     {
         return AlumnosTable::configure($table);

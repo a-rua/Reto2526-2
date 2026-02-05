@@ -5,7 +5,10 @@ namespace App\Filament\Resources\Alumnos\Schemas;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Unique; // Importa esta clase
+use Illuminate\Database\Eloquent\Model; // Importa esta clase
+use Filament\Forms\Components\TextInput;
 class AlumnoForm
 {
     public static function configure(Schema $schema): Schema
@@ -13,20 +16,38 @@ class AlumnoForm
         return $schema
             ->schema([
 
+
                 // Nombre del usuario
-                Forms\Components\TextInput::make('usuario.nombre')
+                TextInput::make('usuario.nombre')
                     ->label('Nombre')
-                    ->required(),
+                    ->required()
+                    // Especificar la tabla y usar modifyRuleUsing para el ID correcto
+                    ->unique(table: 'usuarios', column: 'nombre', modifyRuleUsing: function (Unique $rule, ?Model $record) {
+                        if ($record && $record->usuario) {
+                            return $rule->ignore($record->usuario->id_usuario, 'id_usuario');
+                        }
+                        return $rule;
+                    }),
 
                 // Email del usuario
-                Forms\Components\TextInput::make('usuario.email')
+                TextInput::make('usuario.email')
                     ->label('Email')
                     ->email()
-                    ->required(),
+                    ->required()
+                    // Especificar la tabla y usar modifyRuleUsing para el ID correcto
+                    ->unique(table: 'usuarios', column: 'email', modifyRuleUsing: function (Unique $rule, ?Model $record) {
+                        if ($record && $record->usuario) {
+                            return $rule->ignore($record->usuario->id_usuario, 'id_usuario');
+                        }
+                        return $rule;
+                    }),
 
 Forms\Components\TextInput::make('usuario.password')
-    ->label('Contraseña')
-    ->required(),
+    ->password()
+    ->required(fn (string $operation): bool => $operation === 'create')
+    // Cambia la lógica de deshidratación para permitir que el valor pase si está relleno
+    ->dehydrated(fn ($state) => filled($state)),
+
                 // Grupo del alumno
                 Select::make('grupo_id')
                     ->label('Grupo')

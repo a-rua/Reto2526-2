@@ -86,7 +86,18 @@ class Usuario extends Authenticatable
     // -----------------------------
     // Accesor de nombre
     // -----------------------------
+public function getRolAttribute(): string
+{
+    if ($this->responsable()->exists()) {
+        return $this->responsable->admin ? 'Administrador' : 'Responsable';
+    }
 
+    if ($this->alumno()->exists()) {
+        return 'Alumno';
+    }
+
+    return 'Usuario';
+}
     /**
      * Devuelve el email como nombre por defecto
      */

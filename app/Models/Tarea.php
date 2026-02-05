@@ -40,9 +40,7 @@ class Tarea extends Model
         return $this->belongsTo(Responsable::class, 'id_responsable', 'id');
     }
 
-    /**
-     * Relación con Fase (opcional)
-     */
+
     public function fase()
     {
         return $this->belongsTo(Fase::class, 'id_fase', 'id_fase');
@@ -53,7 +51,7 @@ class Tarea extends Model
      */
   public function materiales()
 {
-    // Relación con la tabla intermedia que guarda la 'cantidad'
+
     return $this->belongsToMany(Material::class, 'material_tarea', 'id_tarea', 'id_material')
                 ->withPivot('cantidad');
 }

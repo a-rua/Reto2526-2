@@ -18,7 +18,7 @@ protected function handleRecordCreation(array $data): Alumno
     $usuario = Usuario::create([
         'nombre'   => $data['usuario']['nombre'],
         'email'    => $data['usuario']['email'],
-        'password' => bcrypt($data['usuario']['password']), // Volvemos a encriptar
+        'password' => bcrypt($data['usuario']['password']),
         'activo'   => true,
     ]);
 
