@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Proveedor extends Model
 {
-    // Nombre de la tabla (opcional si sigue la convención, pero mejor asegurar)
+
     protected $table = 'proveedors';
 
-    // ¡IMPORTANTE! Tu migración usa 'id_proveedores' como PK
+
     protected $primaryKey = 'id_proveedores';
 
-    // Permitimos la asignación masiva del nombre
+
     protected $fillable = [
         'nombre_proveedor',
     ];

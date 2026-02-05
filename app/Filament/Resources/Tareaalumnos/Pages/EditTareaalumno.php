@@ -19,31 +19,27 @@ class EditTareaalumno extends EditRecord
 
 protected function afterSave(): void
 {
- $tarea = $this->record;
-$user = auth()->user();
+    $tarea = $this->getRecord(); // El modelo Tarea
+    $user = auth()->user();
 
-// 1. Obtenemos el objeto Responsable a través de la relación
-// Esto usará el 'id_responsable' que ya tiene la tarea.
-$responsable = $tarea->responsable;
+    // Obtenemos los datos que el usuario escribió en el formulario
+    $data = $this->form->getState();
+    $comentarioEscrito = $data['comentario_alumno'] ?? null;
 
-if ($tarea->realizado && $responsable) {
-    \App\Models\NotificacionTarea::updateOrCreate(
-        [
-            'id_tarea' => $tarea->id_tarea,
-            'alumno_id' => $user->id_usuario,
-        ],
-        [
-            /**
-             * AQUÍ ESTÁ EL TRUCO:
-             * Tu tabla 'notificacion_tareas' exige un ID de la tabla 'usuarios'.
-             * Por eso sacamos el 'id_usuario' que está dentro del modelo Responsable.
-             */
-            'responsable_id' => $responsable->id_usuario,
+    $responsable = $tarea->responsable;
 
-            'comentario' => $tarea->comentario_alumno,
-            'leido_at' => null,
-        ]
-    );
-}
+    if ($tarea->realizado && $responsable) {
+        \App\Models\NotificacionTarea::updateOrCreate(
+            [
+                'id_tarea' => $tarea->id_tarea,
+                'alumno_id' => $user->id_usuario,
+            ],
+            [
+                'responsable_id' => $responsable->id_usuario,
+                'comentario' => $comentarioEscrito,
+                'leido_at' => null,
+            ]
+        );
+    }
 }
 }

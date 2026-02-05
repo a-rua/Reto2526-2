@@ -21,7 +21,7 @@ class AlumnoForm
                 TextInput::make('usuario.nombre')
                     ->label('Nombre')
                     ->required()
-                    // Especificar la tabla y usar modifyRuleUsing para el ID correcto
+
                     ->unique(table: 'usuarios', column: 'nombre', modifyRuleUsing: function (Unique $rule, ?Model $record) {
                         if ($record && $record->usuario) {
                             return $rule->ignore($record->usuario->id_usuario, 'id_usuario');
@@ -34,7 +34,7 @@ class AlumnoForm
                     ->label('Email')
                     ->email()
                     ->required()
-                    // Especificar la tabla y usar modifyRuleUsing para el ID correcto
+
                     ->unique(table: 'usuarios', column: 'email', modifyRuleUsing: function (Unique $rule, ?Model $record) {
                         if ($record && $record->usuario) {
                             return $rule->ignore($record->usuario->id_usuario, 'id_usuario');
@@ -45,7 +45,7 @@ class AlumnoForm
 Forms\Components\TextInput::make('usuario.password')
     ->password()
     ->required(fn (string $operation): bool => $operation === 'create')
-    // Cambia la lógica de deshidratación para permitir que el valor pase si está relleno
+
     ->dehydrated(fn ($state) => filled($state)),
 
                 // Grupo del alumno

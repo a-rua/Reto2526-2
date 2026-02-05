@@ -71,11 +71,11 @@ class NotificacionTareaResource extends Resource
                             ->formatStateUsing(fn ($state) => Tarea::find($state)?->nombre ?? 'Sin nombre')
                             ->disabled(),
 
-                        \Filament\Forms\Components\Textarea::make('comentario')
-                            ->label('Comentario del Alumno')
-                            ->rows(3)
-                            ->columnSpanFull()
-                            ->disabled(),
+                       \Filament\Forms\Components\Textarea::make('comentario') // Debe llamarse igual que en el modelo/DB
+                        ->label('Comentario del Alumno')
+                        ->rows(3)
+                        ->columnSpanFull()
+                        ->disabled(), // Lo mantenemos disabled para que el responsable no lo edite
 
                         \Filament\Forms\Components\DateTimePicker::make('leido_at')
                             ->label('Fecha de Revisión')

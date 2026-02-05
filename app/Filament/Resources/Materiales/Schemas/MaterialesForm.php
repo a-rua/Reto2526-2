@@ -16,7 +16,8 @@ class MaterialesForm
                 TextInput::make('nombre_material')
                     ->label('Nombre del Material')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                      ->unique(table: 'materials', column: 'nombre_material', ignoreRecord: true),
 
                 Textarea::make('descripcion')
                     ->label('Descripción')
@@ -27,8 +28,8 @@ class MaterialesForm
                     ->required()
                     ->relationship('proveedor', 'nombre_proveedor')
                     ->searchable()
-                    ->preload()
-                    ->nullable(),
+                    ->preload(),
+
 
                 // AÑADIMOS LA RELACIÓN CON TAREAS
                 Select::make('tareas')

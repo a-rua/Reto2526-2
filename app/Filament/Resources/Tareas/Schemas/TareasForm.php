@@ -24,15 +24,15 @@ class TareasForm
 
                 DateTimePicker::make('fecha_inicio')
                     ->label('Fecha de inicio')
-                    ->nullable(),
+                    ->required(),
 
                 TimePicker::make('estimado')
                     ->label('Tiempo estimado')
-                    ->nullable(),
+                    ->required(),
 
                 DateTimePicker::make('fecha_fin')
                     ->label('Fecha de fin')
-                    ->nullable(),
+                    ->required(),
 
                 Toggle::make('visible')
                     ->label('Visible')
@@ -50,21 +50,22 @@ class TareasForm
 
 
 
-Select::make('id_responsable')
-    ->label('Responsable')
-    ->relationship(
-        'responsable',
-        'id',
-        fn (Builder $query) => $query
-            ->where('admin', false)
-            ->with('usuario')
-    )
-    ->getOptionLabelFromRecordUsing(fn ($record) =>
-        $record->usuario?->nombre ?? 'Sin usuario'
-    )
-    ->searchable()
-    ->preload()
-    ->required(),
+                Select::make('id_responsable')
+                    ->label('Responsable')
+                    ->relationship(
+                        'responsable',
+                        'id',
+                        fn(Builder $query) => $query
+                            ->where('admin', false)
+                            ->with('usuario')
+                    )
+                    ->getOptionLabelFromRecordUsing(
+                        fn($record) =>
+                        $record->usuario?->nombre ?? 'Sin usuario'
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->required(),
 
 
 

@@ -18,7 +18,7 @@ class TareaalumnoForm
                     ->onColor('success'),
 
                 // Campo de comentarios
-                Textarea::make('comentario_alumno') // Asegúrate de que esta columna exista en tu DB
+                Textarea::make('comentario_alumno')
                     ->label('Comentarios sobre la entrega')
                     ->placeholder('Escribe aquí si tienes algo que reportar...')
                     ->rows(3)

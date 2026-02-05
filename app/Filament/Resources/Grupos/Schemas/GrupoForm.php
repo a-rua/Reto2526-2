@@ -52,7 +52,7 @@ class GrupoForm
             Placeholder::make('alumnos_actuales')
                 ->label('Alumnos en este grupo')
                 ->content(function ($get, $record) {
-                    // $record es el modelo Grupo actual
+                    // $record es el  Grupo actual
                     if (! $record) {
                         return 'Sin alumnos asignados';
                     }

@@ -14,7 +14,7 @@ class CreateAlumno extends CreateRecord
 
 protected function handleRecordCreation(array $data): Alumno
 {
-    // 1. Crear usuario con contraseña ENCRIPTADA
+    //  Crear usuario con contraseña ENCRIPTADA
     $usuario = Usuario::create([
         'nombre'   => $data['usuario']['nombre'],
         'email'    => $data['usuario']['email'],
@@ -22,7 +22,7 @@ protected function handleRecordCreation(array $data): Alumno
         'activo'   => true,
     ]);
 
-    // 2. Crear alumno relacionado
+    //  Crear alumno relacionado
     return Alumno::create([
         'id_usuario' => $usuario->id_usuario,
         'grupo_id'   => $data['grupo_id'],

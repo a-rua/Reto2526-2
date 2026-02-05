@@ -30,7 +30,7 @@ class FasesTable
                     ->label('Descripción')
                     ->limit(50),
 
-                // MOSTRAR TAREAS: Usamos badge para que se vean bien si hay varias
+
                 TextColumn::make('tareas.nombre')
                     ->label('Tareas')
                     ->badge()

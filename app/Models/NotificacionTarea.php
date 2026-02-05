@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class NotificacionTarea extends Model
 {
-    // Nombre de la tabla según tu migración
+
     protected $table = 'notificacion_tareas';
 
     protected $fillable = [
@@ -24,7 +24,7 @@ class NotificacionTarea extends Model
 
 public function alumno_usuario()
 {
-    // Relacionamos con Usuario usando el alumno_id de la notificación
+
     return $this->belongsTo(Usuario::class, 'alumno_id', 'id_usuario');
 }
 }

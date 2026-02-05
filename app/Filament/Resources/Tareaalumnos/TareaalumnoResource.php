@@ -7,9 +7,9 @@ use App\Filament\Resources\Tareaalumnos\Pages;
 use App\Models\Tarea;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema; // <--- IMPRESCINDIBLE PARA EL MÉTODO FORM
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Filament\Actions\EditAction; // <--- CORREGIDO PARA TABLAS
+use Filament\Actions\EditAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class TareaalumnoResource extends Resource
@@ -19,11 +19,12 @@ class TareaalumnoResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Mis Tareas';
+
 public static function canAccess(): bool
 {
     $user = auth()->user();
 
-    // Solo permite el acceso si el usuario está logueado y tiene perfil de alumno
+
     return $user && $user->isAlumno();
 }
     public static function getEloquentQuery(): Builder

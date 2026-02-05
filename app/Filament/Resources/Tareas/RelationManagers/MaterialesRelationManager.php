@@ -3,12 +3,10 @@
 namespace App\Filament\Resources\Tareas\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Schema; // Usamos Schema que es la que tu versión reconoce
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables;
-
-// IMPORTANTE: Namespaces correctos para las acciones de tabla en v4
 use Filament\Actions\AttachAction;
 use Filament\Actions\DetachAction;
 use Filament\Actions\EditAction;
@@ -21,9 +19,7 @@ class MaterialesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'nombre_material';
 
-    /**
-     * Configuramos el formulario usando Schema para evitar el FatalError
-     */
+
     public function configureSchema(Schema $schema): Schema
     {
         return $schema
@@ -36,7 +32,7 @@ class MaterialesRelationManager extends RelationManager
             ]);
     }
 
-    // Si tu versión usa el método form(Schema $schema)
+
     public function form(Schema $schema): Schema
     {
         return $schema
